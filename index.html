@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thyme &amp; Again — your recipe binder</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============================================================
+       COVER SCREEN — shown when no one is logged in
+       ============================================================ -->
+  <section id="view-auth" class="cover">
+    <div class="cover-art">
+      <div class="cover-mark">Thyme &amp; <span>Again</span></div>
+      <div>
+        <h1 class="cover-headline">Recipes you come back to.</h1>
+        <p class="cover-sub">A small binder of dishes worth repeating — searchable, saveable, and ready whenever you're standing in the kitchen wondering what's for dinner.</p>
+      </div>
+      <div class="cover-stamp">12 recipes inside</div>
+    </div>
+
+    <div class="cover-panel">
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-login" type="button">Log in</button>
+          <button class="auth-tab" id="tab-signup" type="button">Sign up</button>
+        </div>
+
+        <!-- Login form -->
+        <form id="form-login">
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-hint">Log in to open your recipe box.</p>
+          <div id="login-error"></div>
+          <div class="field">
+            <label for="login-email">Email</label>
+            <input id="login-email" type="email" autocomplete="email" placeholder="you@kitchen.com" required>
+          </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Log in</button>
+          <p class="auth-hint" style="margin:14px 0 0;">Demo account: <span class="mono">demo@thyme.com</span> / <span class="mono">demo123</span></p>
+        </form>
+
+        <!-- Signup form -->
+        <form id="form-signup" class="hidden">
+          <h2 class="auth-title">Set up your binder</h2>
+          <p class="auth-hint">Create an account to start saving recipes.</p>
+          <div id="signup-error"></div>
+          <div class="field">
+            <label for="signup-name">Name</label>
+            <input id="signup-name" type="text" autocomplete="name" placeholder="Alex Rivera" required>
+          </div>
+          <div class="field">
+            <label for="signup-email">Email</label>
+            <input id="signup-email" type="email" autocomplete="email" placeholder="you@kitchen.com" required>
+          </div>
+          <div class="field">
+            <label for="signup-password">Password</label>
+            <input id="signup-password" type="password" autocomplete="new-password" placeholder="At least 6 characters" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Create account</button>
+        </form>
+
+        <p class="auth-switch" id="auth-switch-text">
+          New here? <button type="button" id="link-to-signup">Create an account</button>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       APP SHELL — everything below only shows once logged in
+       ============================================================ -->
+  <div id="view-app" class="hidden">
+    <div class="binder-rail" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-mark">Thyme &amp; <span>Again</span></div>
+        <nav class="topbar-nav">
+          <button data-nav="browse" class="active" type="button">Browse</button>
+          <button data-nav="saved" type="button">Recipe Box</button>
+          <button data-nav="profile" type="button">Profile</button>
+        </nav>
+        <div class="topbar-right">
+          <span class="topbar-user" id="topbar-username"></span>
+          <button class="topbar-logout" id="btn-logout" type="button">Log out</button>
+        </div>
+      </header>
+
+      <!-- ---------- BROWSE ---------- -->
+      <section id="view-browse" class="view">
+        <div class="browse-hero">
+          <div>
+            <h2 class="browse-greeting">What are we cooking, <em id="greeting-name">there</em>?</h2>
+            <p class="browse-sub">Search the binder or flip through by section.</p>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <div class="search-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input id="search-input" type="text" placeholder="Search recipes, ingredients, tags…">
+          </div>
+        </div>
+
+        <div class="tabs-row" id="category-tabs"></div>
+
+        <p class="results-meta" id="results-meta"></p>
+        <div class="recipe-grid" id="browse-grid"></div>
+      </section>
+
+      <!-- ---------- RECIPE DETAIL ---------- -->
+      <section id="view-detail" class="view hidden">
+        <button class="detail-back" id="btn-back" type="button">&larr; Back to recipes</button>
+        <div id="detail-content"></div>
+      </section>
+
+      <!-- ---------- RECIPE BOX (saved) ---------- -->
+      <section id="view-saved" class="view hidden">
+        <div class="browse-hero">
+          <div>
+            <h2 class="browse-greeting">Your recipe box</h2>
+            <p class="browse-sub">Everything you've tucked away for later.</p>
+          </div>
+        </div>
+        <div class="recipe-grid" id="saved-grid"></div>
+      </section>
+
+      <!-- ---------- PROFILE ---------- -->
+      <section id="view-profile" class="view hidden">
+        <h2 class="browse-greeting" style="margin-bottom:24px;">Profile</h2>
+        <div class="profile-card">
+          <div class="profile-top">
+            <div class="profile-avatar" id="profile-initials"></div>
+            <div>
+              <div class="profile-name" id="profile-name"></div>
+              <div class="profile-email" id="profile-email"></div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div>
+              <div class="num mono" id="stat-saved">0</div>
+              <div class="lbl">Saved recipes</div>
+            </div>
+            <div>
+              <div class="num mono" id="stat-total">12</div>
+              <div class="lbl">In the binder</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost" id="btn-logout-2" type="button">Log out</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="recipes-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
